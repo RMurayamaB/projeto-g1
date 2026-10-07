@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sistema Financeiro e Crédito no Brasil | Projeto G1</title>
+  <meta name="description" content="Projeto de análise e visualização de dados do sistema financeiro e de crédito no Brasil (2015–2024) com Python, Pandas, Matplotlib, Seaborn, Plotly e Streamlit.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --azul: #0B3D91;
+      --azul-claro: #2E86AB;
+      --verde: #2CA58D;
+      --laranja: #F2A541;
+      --vermelho: #D1495B;
+      --cinza: #6C757D;
+      --fundo: #F5F7FB;
+      --texto: #1F2937;
+      --borda: #E3E8F0;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body { font-family: "Inter", "Segoe UI", Arial, sans-serif; color: var(--texto); background: #fff; line-height: 1.65; }
+    a { color: var(--azul); }
+    .container { max-width: 1160px; margin: 0 auto; padding: 0 24px; }
+
+    /* Navegação */
+    nav { position: sticky; top: 0; z-index: 10; background: rgba(255,255,255,.95); backdrop-filter: blur(6px); border-bottom: 1px solid var(--borda); }
+    nav .container { display: flex; align-items: center; justify-content: space-between; height: 62px; }
+    nav .marca { font-weight: 800; color: var(--azul); letter-spacing: -.3px; }
+    nav ul { list-style: none; display: flex; gap: 22px; }
+    nav ul a { text-decoration: none; color: var(--texto); font-size: .92rem; font-weight: 500; }
+    nav ul a:hover { color: var(--azul); }
+
+    /* Hero */
+    header.hero { background: linear-gradient(135deg, #0B3D91 0%, #164FA8 55%, #2E86AB 100%); color: #fff; padding: 84px 0 76px; }
+    .hero .etiqueta { display: inline-block; background: rgba(255,255,255,.15); border: 1px solid rgba(255,255,255,.3); padding: 5px 14px; border-radius: 999px; font-size: .82rem; letter-spacing: .4px; }
+    .hero h1 { font-size: clamp(2rem, 4.4vw, 3.3rem); line-height: 1.15; margin: 18px 0 14px; font-weight: 800; letter-spacing: -1px; }
+    .hero p.sub { font-size: 1.15rem; max-width: 760px; opacity: .93; }
+    .botoes { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 30px; }
+    .btn { display: inline-block; padding: 12px 22px; border-radius: 8px; font-weight: 600; text-decoration: none; font-size: .95rem; transition: transform .15s; }
+    .btn:hover { transform: translateY(-2px); }
+    .btn.primario { background: #fff; color: var(--azul); }
+    .btn.secundario { border: 1.5px solid rgba(255,255,255,.75); color: #fff; }
+    .meta-hero { display: flex; flex-wrap: wrap; gap: 34px; margin-top: 46px; font-size: .9rem; opacity: .9; }
+    .meta-hero strong { display: block; font-size: 1.6rem; font-weight: 800; opacity: 1; }
+
+    /* Seções */
+    section { padding: 72px 0; }
+    section.alt { background: var(--fundo); }
+    .titulo-secao { font-size: .8rem; font-weight: 700; color: var(--azul-claro); text-transform: uppercase; letter-spacing: 1.4px; }
+    h2 { font-size: 2rem; color: var(--azul); margin: 6px 0 18px; letter-spacing: -.5px; }
+    h3 { color: var(--azul); font-size: 1.12rem; margin-bottom: 8px; }
+    .lead { font-size: 1.06rem; color: #374151; max-width: 860px; }
+    .grade-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 28px; }
+    .grade-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+    .grade-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 18px; }
+    .cartao { background: #fff; border: 1px solid var(--borda); border-radius: 12px; padding: 22px; }
+    section.alt .cartao { box-shadow: 0 1px 2px rgba(16,24,40,.04); }
+    ol.perguntas { padding-left: 20px; }
+    ol.perguntas li { margin: 6px 0; }
+
+    /* KPIs */
+    .kpi { border-left: 4px solid var(--azul); }
+    .kpi .rotulo { font-size: .82rem; color: var(--cinza); font-weight: 500; }
+    .kpi .valor { font-size: 1.65rem; font-weight: 800; color: var(--texto); letter-spacing: -.5px; }
+    .kpi .nota { font-size: .8rem; color: var(--cinza); }
+    .kpi.verde { border-left-color: var(--verde); }
+    .kpi.laranja { border-left-color: var(--laranja); }
+    .kpi.vermelho { border-left-color: var(--vermelho); }
+
+    /* Tabela */
+    table { width: 100%; border-collapse: collapse; font-size: .92rem; }
+    th, td { text-align: left; padding: 10px 12px; border-bottom: 1px solid var(--borda); vertical-align: top; }
+    th { background: #EEF2F8; color: var(--azul); font-weight: 600; }
+    code { background: #EEF2F8; padding: 1px 6px; border-radius: 4px; font-size: .86em; }
+
+    /* Metodologia */
+    .etapas { counter-reset: etapa; display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; }
+    .etapa { position: relative; padding-left: 58px; }
+    .etapa::before { counter-increment: etapa; content: counter(etapa); position: absolute; left: 20px; top: 22px; width: 28px; height: 28px; border-radius: 50%; background: var(--azul); color: #fff; font-weight: 700; font-size: .85rem; display: flex; align-items: center; justify-content: center; }
+    .etapa p { font-size: .92rem; color: #4B5563; }
+
+    /* Resultados */
+    figure { background: #fff; border: 1px solid var(--borda); border-radius: 12px; padding: 14px; }
+    figure img { width: 100%; height: auto; border-radius: 6px; display: block; }
+    figcaption { font-size: .9rem; color: #4B5563; margin-top: 10px; }
+    figcaption strong { color: var(--azul); }
+    .resultado { margin-bottom: 26px; }
+
+    /* Dashboard */
+    .preview img { width: 100%; border-radius: 10px; border: 1px solid var(--borda); box-shadow: 0 10px 30px rgba(11,61,145,.12); }
+    ul.lista { padding-left: 18px; }
+    ul.lista li { margin: 5px 0; }
+    .tags { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 8px; }
+    .tag { background: #EEF2F8; color: var(--azul); border: 1px solid #D6DFEE; padding: 6px 13px; border-radius: 999px; font-size: .85rem; font-weight: 600; }
+    .tag.req { background: var(--azul); color: #fff; border-color: var(--azul); }
+
+    pre.arvore { background: #0F172A; color: #E2E8F0; padding: 22px; border-radius: 12px; font-size: .87rem; line-height: 1.55; overflow-x: auto; }
+    .destaque { background: #fff; border-left: 4px solid var(--azul); border-radius: 8px; padding: 18px 22px; }
+
+    footer { background: #0B1F45; color: #CBD5E1; padding: 40px 0; font-size: .9rem; }
+    footer .container { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 16px; }
+    footer a { color: #fff; }
+
+    @media (max-width: 900px) {
+      .grade-2, .grade-3, .etapas { grid-template-columns: 1fr; }
+      .grade-4 { grid-template-columns: 1fr 1fr; }
+      nav ul { display: none; }
+    }
+  </style>
+</head>
+<body>
+
+<nav>
+  <div class="container">
+    <span class="marca">Crédito no Brasil · Projeto G1</span>
+    <ul>
+      <li><a href="#projeto">Projeto</a></li>
+      <li><a href="#dados">Dados</a></li>
+      <li><a href="#kpis">KPIs</a></li>
+      <li><a href="#metodologia">Metodologia</a></li>
+      <li><a href="#resultados">Resultados</a></li>
+      <li><a href="#dashboard">Dashboard</a></li>
+      <li><a href="#conclusao">Conclusão</a></li>
+    </ul>
+  </div>
+</nav>
+
+<header class="hero">
+  <div class="container">
+    <span class="etiqueta">Linguagem de Programação · Análise e Visualização de Dados com Python · Tema 28</span>
+    <h1>Sistema Financeiro e Crédito no Brasil</h1>
+    <p class="sub">Análise da concessão de crédito, taxas de juros, inadimplência e risco por região, estado, modalidade
+      e setor econômico entre 2015 e 2024 — com notebook analítico, banco de dados relacional e dashboard interativo.</p>
+    <div class="botoes">
+      <!-- Substitua os links abaixo pelos endereços do seu repositório e do seu app publicado -->
+      <a class="btn primario" href="https://SEU-APP.streamlit.app" target="_blank" rel="noopener">Abrir dashboard</a>
+      <a class="btn secundario" href="https://github.com/SEU-USUARIO/projeto-g1" target="_blank" rel="noopener">Repositório no GitHub</a>
+      <a class="btn secundario" href="https://github.com/SEU-USUARIO/projeto-g1/blob/main/notebooks/analise_sistema_financeiro.ipynb" target="_blank" rel="noopener">Notebook de análise</a>
+    </div>
+    <div class="meta-hero">
+      <div><strong>4.440</strong>registros analisados</div>
+      <div><strong>10 anos</strong>2015 a 2024, mensal</div>
+      <div><strong>20 UFs</strong>5 regiões do Brasil</div>
+      <div><strong>9 páginas</strong>no dashboard Streamlit</div>
+    </div>
+  </div>
+</header>
+
+<section id="projeto">
+  <div class="container grade-2">
+    <div>
+      <span class="titulo-secao">O problema</span>
+      <h2>Por que analisar o crédito?</h2>
+      <p class="lead">O crédito financia consumo e investimento, mas sua expansão sem controle de risco eleva a
+        inadimplência e encarece o dinheiro. Entender <strong>onde o crédito se concentra</strong>, <strong>como evolui</strong>
+        e <strong>quais segmentos são mais arriscados</strong> é essencial para políticas de concessão, precificação e
+        monitoramento de carteiras.</p>
+      <p class="lead" style="margin-top:14px">O objetivo do projeto é desenvolver uma aplicação analítica completa para
+        investigar esses padrões, do tratamento dos dados à publicação de um painel interativo.</p>
+    </div>
+    <div class="cartao">
+      <h3>Perguntas orientadoras</h3>
+      <ol class="perguntas">
+        <li>Quais regiões apresentam maior volume de crédito?</li>
+        <li>Quais setores possuem maior inadimplência?</li>
+        <li>Houve crescimento do crédito ao longo do tempo?</li>
+        <li>Existe relação entre juros e inadimplência?</li>
+        <li>Quais modalidades financeiras apresentam maior risco?</li>
+        <li>Como o comportamento financeiro evoluiu?</li>
+        <li>Quais estados possuem maior concentração bancária?</li>
+      </ol>
+    </div>
+  </div>
+</section>
+
+<section id="dados" class="alt">
+  <div class="container">
+    <span class="titulo-secao">Base de dados</span>
+    <h2>simulacao_sistema_financeiro_brasil.csv</h2>
+    <p class="lead">Base simulada fornecida para a disciplina, com registros mensais de operações de crédito por estado,
+      modalidade e setor. Complementada por séries reais do Banco Central obtidas via API.</p>
+    <div class="cartao" style="margin-top:24px; overflow-x:auto">
+      <table>
+        <thead><tr><th>Coluna</th><th>Descrição</th><th>Coluna</th><th>Descrição</th></tr></thead>
+        <tbody>
+          <tr><td><code>ano</code>, <code>mes</code>, <code>data</code></td><td>Período de referência</td><td><code>quantidade_clientes</code></td><td>Total de clientes</td></tr>
+          <tr><td><code>regiao</code>, <code>uf</code></td><td>Região e estado</td><td><code>renda_media</code></td><td>Renda média regional (R$)</td></tr>
+          <tr><td><code>modalidade_credito</code></td><td>Cartão, pessoal, empresarial, imobiliário, veículos</td><td><code>prazo_medio_pagamento</code></td><td>Prazo médio (meses)</td></tr>
+          <tr><td><code>valor_credito</code></td><td>Valor concedido (R$)</td><td><code>risco_credito</code></td><td>Baixo, Médio, Alto</td></tr>
+          <tr><td><code>taxa_juros</code></td><td>Taxa média de juros (% a.a.)</td><td><code>setor_economico</code></td><td>Agropecuária, Comércio, Indústria, Serviços</td></tr>
+          <tr><td><code>inadimplencia_percentual</code></td><td>Índice de inadimplência (%)</td><td><em>API BCB (SGS)</em></td><td>Selic (4189), inadimplência do SFN (21082), saldo da carteira (20539)</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<section id="kpis">
+  <div class="container">
+    <span class="titulo-secao">Indicadores-chave</span>
+    <h2>KPIs da base completa (2015–2024)</h2>
+    <div class="grade-3" style="margin-top:22px">
+      <div class="cartao kpi"><div class="rotulo">Volume total de crédito</div><div class="valor">R$ 22,44 bi</div><div class="nota">Indicador financeiro</div></div>
+      <div class="cartao kpi laranja"><div class="rotulo">Taxa média de juros</div><div class="valor">48,74% a.a.</div><div class="nota">Indicador econômico</div></div>
+      <div class="cartao kpi vermelho"><div class="rotulo">Índice médio de inadimplência</div><div class="valor">10,62%</div><div class="nota">Indicador de risco</div></div>
+      <div class="cartao kpi verde"><div class="rotulo">Modalidade mais utilizada</div><div class="valor">Cartão</div><div class="nota">20,5% do volume concedido</div></div>
+      <div class="cartao kpi"><div class="rotulo">Região com maior crédito</div><div class="valor">Sudeste</div><div class="nota">36,3% do volume concedido</div></div>
+      <div class="cartao kpi verde"><div class="rotulo">Prazo médio de pagamento</div><div class="valor">123,0 meses</div><div class="nota">Perfil financeiro</div></div>
+    </div>
+    <div class="grade-4" style="margin-top:18px">
+      <div class="cartao kpi"><div class="rotulo">Clientes atendidos</div><div class="valor">110,8 mi</div></div>
+      <div class="cartao kpi vermelho"><div class="rotulo">Valor estimado em atraso</div><div class="valor">R$ 2,38 bi</div></div>
+      <div class="cartao kpi"><div class="rotulo">Concentração (HHI por UF)</div><div class="valor">617</div><div class="nota">baixa concentração</div></div>
+      <div class="cartao kpi laranja"><div class="rotulo">Operações de risco alto</div><div class="valor">32,8%</div></div>
+    </div>
+  </div>
+</section>
+
+<section id="metodologia" class="alt">
+  <div class="container">
+    <span class="titulo-secao">Metodologia</span>
+    <h2>Do dado bruto à decisão</h2>
+    <div class="etapas" style="margin-top:22px">
+      <div class="cartao etapa"><h3>Leitura e limpeza</h3><p>Leitura com tratamento de BOM, padronização de textos e tipos, verificação de nulos e duplicados, regras de consistência e detecção de outliers (IQR).</p></div>
+      <div class="cartao etapa"><h3>Engenharia de atributos</h3><p>Período, trimestre, ticket médio por cliente, valor estimado em atraso, faixas de juros, renda e prazo e indicador de risco alto.</p></div>
+      <div class="cartao etapa"><h3>Análise exploratória</h3><p>Estatísticas descritivas, distribuições, séries temporais com média móvel e tendência, comparação entre grupos e correlação (Pearson e Spearman).</p></div>
+      <div class="cartao etapa"><h3>Banco relacional</h3><p>Persistência em SQLite com SQLAlchemy em esquema estrela (dimensões e fato) e consultas SQL analíticas.</p></div>
+      <div class="cartao etapa"><h3>Integração de fontes</h3><p>Consumo da API SGS do Banco Central com Requests para comparar a base com Selic e inadimplência reais.</p></div>
+      <div class="cartao etapa"><h3>Dashboard e publicação</h3><p>Painel multipágina em Streamlit com filtros, KPIs dinâmicos e gráficos interativos (Plotly), publicado no Streamlit Community Cloud.</p></div>
+    </div>
+  </div>
+</section>
+
+<section id="resultados">
+  <div class="container">
+    <span class="titulo-secao">Principais resultados</span>
+    <h2>O que os dados mostram</h2>
+
+    <div class="grade-2 resultado">
+      <figure><img src="imagens/01_evolucao_temporal.png" alt="Evolução mensal do volume de crédito">
+        <figcaption><strong>Crescimento do crédito.</strong> O volume anual ficou estável em torno de R$ 2,2–2,3 bi, com CAGR de 0,28% a.a.; queda em 2020 (-2,8%), pico em 2021 e recuo em 2022.</figcaption></figure>
+      <figure><img src="imagens/03_heatmap_mensal.png" alt="Heatmap mensal do volume de crédito">
+        <figcaption><strong>Heatmap mensal.</strong> Não há sazonalidade forte; novembro e janeiro concentram os maiores volumes médios e setembro o menor.</figcaption></figure>
+    </div>
+
+    <div class="grade-2 resultado">
+      <figure><img src="imagens/04_regioes.png" alt="Volume e inadimplência por região">
+        <figcaption><strong>Regiões.</strong> O Sudeste concentra 36,3% do volume, explicado pelo maior número de operações; o valor médio por registro é semelhante entre regiões. O Nordeste tem a maior inadimplência média (10,79%).</figcaption></figure>
+      <figure><img src="imagens/05_concentracao_uf.png" alt="Concentração do crédito por estado">
+        <figcaption><strong>Concentração bancária.</strong> RJ lidera com 11,2% do crédito; RJ, ES e MG somam 28,1%. HHI de 617 indica baixa concentração. Estados críticos: PR, CE e ES.</figcaption></figure>
+    </div>
+
+    <div class="grade-2 resultado">
+      <figure><img src="imagens/06_modalidades.png" alt="Volume e inadimplência por modalidade">
+        <figcaption><strong>Modalidades.</strong> Cartão lidera o volume; Imobiliário tem a maior inadimplência média (10,78%) e Veículos a maior proporção de operações de risco alto (35,0%).</figcaption></figure>
+      <figure><img src="imagens/08_setores.png" alt="Inadimplência por setor econômico">
+        <figcaption><strong>Setores.</strong> Comércio apresenta a maior inadimplência (10,97%) e Serviços a menor (10,40%) — diferença inferior a 0,6 p.p.</figcaption></figure>
+    </div>
+
+    <div class="grade-2 resultado">
+      <figure><img src="imagens/09_juros_inadimplencia.png" alt="Dispersão entre juros e inadimplência">
+        <figcaption><strong>Juros × inadimplência.</strong> Correlação de Pearson de -0,008 (p-valor 0,59): não há relação estatisticamente significativa — o preço do crédito não está refletindo o risco observado.</figcaption></figure>
+      <figure><img src="imagens/07_evolucao_risco.png" alt="Evolução do risco de crédito">
+        <figcaption><strong>Evolução do risco.</strong> A participação das operações de risco alto no volume oscilou entre 28% e 37% ao longo do período, sem tendência definida.</figcaption></figure>
+    </div>
+  </div>
+</section>
+
+<section id="dashboard" class="alt">
+  <div class="container">
+    <span class="titulo-secao">Dashboard interativo</span>
+    <h2>Painel em Streamlit</h2>
+    <div class="grade-2" style="align-items:start">
+      <div class="preview"><img src="imagens/dashboard_visao_geral.png" alt="Tela de visão geral do dashboard"></div>
+      <div>
+        <h3>Páginas</h3>
+        <ul class="lista">
+          <li><strong>Visão Geral</strong> — descrição do problema, 10 KPIs dinâmicos com variação anual.</li>
+          <li><strong>Evolução Temporal</strong> — série mensal, média móvel, tendência, variação anual, sazonalidade e heatmap mensal.</li>
+          <li><strong>Análise Regional</strong> — regiões, ranking de estados, HHI, mapa interativo e estados críticos.</li>
+          <li><strong>Modalidades, Setores e Risco</strong> — comparação entre produtos, evolução do risco e setor × modalidade.</li>
+          <li><strong>Juros × Inadimplência</strong> — dispersão, regressão, Pearson, Spearman e matriz de correlação.</li>
+          <li><strong>Indicadores BCB (API)</strong> — Selic e inadimplência reais via API, com cache no banco.</li>
+          <li><strong>Tabela Dinâmica</strong> — cruzamentos personalizados e exportação em CSV.</li>
+          <li><strong>Banco de Dados SQL</strong> — modelo relacional e consultas SQL com SQLAlchemy.</li>
+          <li><strong>Conclusão Executiva</strong> — respostas às perguntas orientadoras e recomendações.</li>
+        </ul>
+        <h3 style="margin-top:18px">Filtros</h3>
+        <p>Ano, mês, região, estado, modalidade, risco de crédito e setor econômico — além de upload de outro CSV com a mesma estrutura.</p>
+      </div>
+    </div>
+    <div class="grade-2" style="margin-top:28px">
+      <div class="cartao">
+        <h3>Funcionalidades intermediárias</h3>
+        <ul class="lista">
+          <li>Filtros múltiplos e dependentes (região → estado)</li>
+          <li>KPIs dinâmicos com variação anual</li>
+          <li>Gráficos interativos (Plotly) e visualizações comparativas</li>
+          <li>Análise temporal e tratamento avançado de dados</li>
+          <li>Upload de arquivos e dashboards organizados em seções</li>
+          <li>Análise geográfica (mapa por UF)</li>
+        </ul>
+      </div>
+      <div class="cartao">
+        <h3>Funcionalidades avançadas</h3>
+        <ul class="lista">
+          <li>Dashboard multipágina (<code>st.navigation</code>)</li>
+          <li>Consumo de API do Banco Central com Requests</li>
+          <li>Persistência e modelagem relacional com SQLAlchemy + SQLite</li>
+          <li>Correlação estatística (Pearson, Spearman, p-valor, R²)</li>
+          <li>Séries temporais avançadas (média móvel, CAGR, tendência)</li>
+          <li>Integração de múltiplas fontes: API + CSV + banco</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="tecnologias">
+  <div class="container grade-2">
+    <div>
+      <span class="titulo-secao">Tecnologias</span>
+      <h2>Ferramentas utilizadas</h2>
+      <div class="tags">
+        <span class="tag req">Python</span><span class="tag req">Pandas</span><span class="tag req">Matplotlib</span>
+        <span class="tag req">Seaborn</span><span class="tag req">Streamlit</span><span class="tag req">GitHub</span>
+        <span class="tag">Plotly</span><span class="tag">NumPy</span><span class="tag">SciPy</span>
+        <span class="tag">SQLAlchemy</span><span class="tag">SQLite</span><span class="tag">Requests</span>
+        <span class="tag">GitHub Pages</span><span class="tag">Streamlit Community Cloud</span>
+      </div>
+      <p style="margin-top:18px; color:#4B5563">Tecnologias em azul escuro são as obrigatórias da disciplina.</p>
+    </div>
+    <div>
+      <span class="titulo-secao">Organização</span>
+      <h2>Estrutura do projeto</h2>
+<pre class="arvore">projeto-g1/
+├── app.py                  # dashboard Streamlit (multipágina)
+├── requirements.txt
+├── README.md
+├── index.html              # esta página (GitHub Pages)
+├── .streamlit/config.toml  # tema do dashboard
+├── dados/
+│   └── simulacao_sistema_financeiro_brasil.csv
+├── database/
+│   ├── banco.py            # SQLAlchemy: modelo, carga e consultas
+│   └── sistema_financeiro.db
+├── notebooks/
+│   └── analise_sistema_financeiro.ipynb
+└── imagens/                # gráficos gerados no notebook</pre>
+    </div>
+  </div>
+</section>
+
+<section id="conclusao" class="alt">
+  <div class="container">
+    <span class="titulo-secao">Conclusão</span>
+    <h2>Síntese executiva</h2>
+    <div class="destaque">
+      <p>O sistema de crédito analisado é <strong>estável e pouco concentrado</strong>: o volume é liderado pelo Sudeste
+        (com destaque para o RJ) principalmente pelo número de operações, e não pelo porte delas. Os indicadores de risco
+        são <strong>homogêneos</strong> entre regiões, setores e modalidades, e a <strong>ausência de correlação entre juros e
+        inadimplência</strong> indica que o preço do crédito não reflete o risco observado.</p>
+      <p style="margin-top:12px"><strong>Recomendações:</strong> monitorar os estados críticos (PR, CE, ES) e o setor de
+        Comércio; revisar a precificação incorporando o perfil do tomador e garantias; diversificar a carteira entre
+        modalidades; e acompanhar Selic e inadimplência do SFN pela API do Banco Central.</p>
+      <p style="margin-top:12px; color:#4B5563"><strong>Limitação:</strong> a base é simulada, com distribuições
+        praticamente uniformes — as conclusões demonstram o método e devem ser validadas com dados reais.</p>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="container">
+    <div><strong>Rafael Murayama Barcelos</strong><br>Projeto G1 · Linguagem de Programação — Análise e Visualização de Dados com Python</div>
+    <div>
+      <a href="https://SEU-APP.streamlit.app" target="_blank" rel="noopener">Dashboard</a> ·
+      <a href="https://github.com/SEU-USUARIO/projeto-g1" target="_blank" rel="noopener">GitHub</a> ·
+      <a href="https://github.com/SEU-USUARIO/projeto-g1/blob/main/notebooks/analise_sistema_financeiro.ipynb" target="_blank" rel="noopener">Notebook</a><br>
+      Fontes: base simulada da disciplina e API SGS do Banco Central do Brasil.
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>
