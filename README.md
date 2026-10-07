@@ -8,9 +8,9 @@ com notebook analítico, banco de dados relacional, integração com a API do Ba
 
 | Entrega | Link |
 |---|---|
-| Repositório GitHub | `https://github.com/SEU-USUARIO/projeto-g1` |
-| Página do projeto (GitHub Pages) | `https://SEU-USUARIO.github.io/projeto-g1/` |
-| Dashboard (Streamlit Community Cloud) | `https://SEU-APP.streamlit.app` |
+| Repositório GitHub | `https://github.com/RMurayamaB/projeto-g1` |
+| Página do projeto (GitHub Pages) | `https://rmurayamab.github.io/projeto-g1/` |
+| Dashboard (Streamlit Community Cloud) | `https://projeto-g1.streamlit.app/` |
 | Notebook | [`notebooks/analise_sistema_financeiro.ipynb`](notebooks/analise_sistema_financeiro.ipynb) |
 | Código do dashboard | [`app.py`](app.py) |
 | Base de dados | [`dados/simulacao_sistema_financeiro_brasil.csv`](dados/simulacao_sistema_financeiro_brasil.csv) |
@@ -99,33 +99,6 @@ streamlit run app.py          # abre o dashboard em http://localhost:8501
 ```
 
 Para o notebook: `pip install jupyter` e abra `notebooks/analise_sistema_financeiro.ipynb`.
-
-## 7. Publicação
-
-**GitHub (código-fonte)**
-1. Crie um repositório público chamado `projeto-g1` em <https://github.com/new>.
-2. Na pasta do projeto:
-   ```bash
-   git init
-   git add .
-   git commit -m "Projeto G1 - Sistema Financeiro e Crédito no Brasil"
-   git branch -M main
-   git remote add origin https://github.com/SEU-USUARIO/projeto-g1.git
-   git push -u origin main
-   ```
-
-**GitHub Pages (página do projeto)**
-1. No repositório: *Settings → Pages*.
-2. Em *Source*, selecione *Deploy from a branch*, branch `main`, pasta `/ (root)` e salve.
-3. Após alguns minutos a página estará em `https://SEU-USUARIO.github.io/projeto-g1/`.
-
-**Streamlit Community Cloud (dashboard)**
-1. Acesse <https://share.streamlit.io> e entre com a conta do GitHub.
-2. *Create app* → selecione o repositório `projeto-g1`, branch `main`, arquivo principal `app.py`.
-3. Em *Advanced settings*, escolha Python 3.11 ou 3.12 e clique em *Deploy*.
-
-**Depois de publicar:** substitua `SEU-USUARIO` e `SEU-APP` pelos endereços reais no `index.html` (botões e rodapé) e
-neste README, e faça um novo `git push`.
 
 ## 8. Principais resultados
 
