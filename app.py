@@ -1,6 +1,8 @@
 """
 Dashboard — Sistema Financeiro e Crédito no Brasil (2015–2024)
 Projeto G1 · Linguagem de Programação — Análise e Visualização de Dados com Python
+Nome aluno: Rafael Murayama Barcelos
+Nome professor: Alexandre Neves Louzada
 
 Executar localmente:
     pip install -r requirements.txt
@@ -454,6 +456,7 @@ METRICAS = {
 def pagina_visao_geral() -> None:
     st.title("Sistema Financeiro e Crédito no Brasil")
     st.markdown("##### Análise de concessão de crédito, juros, inadimplência e risco · 2015 a 2024")
+    st.caption("Aluno: Rafael Murayama Barcelos · Professor: Alexandre Neves Louzada")
 
     with st.expander("Descrição do problema e perguntas orientadoras", expanded=True):
         c1, c2 = st.columns([1.15, 1])

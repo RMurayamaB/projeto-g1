@@ -2,18 +2,19 @@
 
 **Projeto G1 — Tema 28** · Linguagem de Programação: Análise e Visualização de Dados com Python
 **Aluno:** Rafael Murayama Barcelos
+**Aluno:** Alexandre Neves Louzada
 
 Projeto completo de análise e visualização de dados sobre concessão de crédito, juros, inadimplência e risco no Brasil,
 com notebook analítico, banco de dados relacional, integração com a API do Banco Central e dashboard interativo multipágina.
 
-| Entrega | Link |
-|---|---|
-| Repositório GitHub | `https://github.com/RMurayamaB/projeto-g1` |
-| Página do projeto (GitHub Pages) | `https://rmurayamab.github.io/projeto-g1/` |
-| Dashboard (Streamlit Community Cloud) | `https://projeto-g1.streamlit.app/` |
-| Notebook | [`notebooks/analise_sistema_financeiro.ipynb`](notebooks/analise_sistema_financeiro.ipynb) |
-| Código do dashboard | [`app.py`](app.py) |
-| Base de dados | [`dados/simulacao_sistema_financeiro_brasil.csv`](dados/simulacao_sistema_financeiro_brasil.csv) |
+| Entrega                               | Link                                                                                             |
+| ------------------------------------- | ------------------------------------------------------------------------------------------------ |
+| Repositório GitHub                    | `https://github.com/RMurayamaB/projeto-g1`                                                       |
+| Página do projeto (GitHub Pages)      | `https://rmurayamab.github.io/projeto-g1/`                                                       |
+| Dashboard (Streamlit Community Cloud) | `https://projeto-g1.streamlit.app/`                                                              |
+| Notebook                              | [`notebooks/analise_sistema_financeiro.ipynb`](notebooks/analise_sistema_financeiro.ipynb)       |
+| Código do dashboard                   | [`app.py`](app.py)                                                                               |
+| Base de dados                         | [`dados/simulacao_sistema_financeiro_brasil.csv`](dados/simulacao_sistema_financeiro_brasil.csv) |
 
 ---
 
@@ -49,8 +50,8 @@ projeto-g1/
 
 ## 3. Tecnologias
 
-| Obrigatórias | Complementares |
-|---|---|
+| Obrigatórias                                           | Complementares                                     |
+| ------------------------------------------------------ | -------------------------------------------------- |
 | Python, Pandas, Matplotlib, Seaborn, Streamlit, GitHub | Plotly, NumPy, SciPy, SQLAlchemy, SQLite, Requests |
 
 ## 4. Funcionalidades
@@ -61,29 +62,29 @@ dashboard organizado em seções, visualizações comparativas e análise geogr�
 
 **Avançadas:**
 
-| Funcionalidade | Onde |
-|---|---|
-| Dashboard multipágina | `st.navigation` com 9 páginas em `app.py` |
-| Consumo de API (Requests) | Página *Indicadores BCB*: Selic (SGS 4189), inadimplência do SFN (21082) e saldo da carteira (20539) |
-| Persistência em banco (SQLAlchemy + SQLite) | `database/banco.py` e página *Banco de Dados SQL* |
-| Modelagem relacional | Esquema estrela: `dim_regiao`, `dim_uf`, `dim_modalidade`, `dim_setor`, `dim_risco`, `fato_credito`, view `vw_credito_completo` |
-| Correlação estatística | Pearson, Spearman, p-valor, R² e matriz de correlação |
-| Séries temporais avançadas | Média móvel 12m, tendência linear, CAGR, variação anual, sazonalidade |
-| Integração de múltiplas fontes | API do BCB + CSV + banco SQLite (cache da API) |
+| Funcionalidade                              | Onde                                                                                                                            |
+| ------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------- |
+| Dashboard multipágina                       | `st.navigation` com 9 páginas em `app.py`                                                                                       |
+| Consumo de API (Requests)                   | Página _Indicadores BCB_: Selic (SGS 4189), inadimplência do SFN (21082) e saldo da carteira (20539)                            |
+| Persistência em banco (SQLAlchemy + SQLite) | `database/banco.py` e página _Banco de Dados SQL_                                                                               |
+| Modelagem relacional                        | Esquema estrela: `dim_regiao`, `dim_uf`, `dim_modalidade`, `dim_setor`, `dim_risco`, `fato_credito`, view `vw_credito_completo` |
+| Correlação estatística                      | Pearson, Spearman, p-valor, R² e matriz de correlação                                                                           |
+| Séries temporais avançadas                  | Média móvel 12m, tendência linear, CAGR, variação anual, sazonalidade                                                           |
+| Integração de múltiplas fontes              | API do BCB + CSV + banco SQLite (cache da API)                                                                                  |
 
 ## 5. Páginas do dashboard
 
-| Página | Conteúdo |
-|---|---|
-| Visão Geral | Título, descrição do problema, 10 KPIs, linha temporal, barras por região e modalidade, leitura dos indicadores |
-| Evolução Temporal | Série mensal com média móvel e tendência, barras anuais com variação, sazonalidade, heatmap mensal |
-| Análise Regional | Barras por região, ranking de UFs, HHI e CR3, mapa interativo, tabela de estados críticos |
-| Modalidades, Setores e Risco | Barras por modalidade, evolução do risco, inadimplência por setor, heatmap setor × modalidade, boxplot Seaborn |
-| Juros × Inadimplência | Dispersão com regressão, Pearson/Spearman, faixas de juros, matriz de correlação (Seaborn) |
-| Indicadores BCB (API) | Selic e inadimplência reais × base simulada |
-| Tabela Dinâmica | Pivot configurável, dados filtrados, estatísticas descritivas e download CSV |
-| Banco de Dados SQL | Modelo relacional, consultas SQL prontas, gravação do recorte filtrado |
-| Conclusão Executiva | Respostas às 7 perguntas, recomendações e limitações (texto gerado conforme os filtros) |
+| Página                       | Conteúdo                                                                                                        |
+| ---------------------------- | --------------------------------------------------------------------------------------------------------------- |
+| Visão Geral                  | Título, descrição do problema, 10 KPIs, linha temporal, barras por região e modalidade, leitura dos indicadores |
+| Evolução Temporal            | Série mensal com média móvel e tendência, barras anuais com variação, sazonalidade, heatmap mensal              |
+| Análise Regional             | Barras por região, ranking de UFs, HHI e CR3, mapa interativo, tabela de estados críticos                       |
+| Modalidades, Setores e Risco | Barras por modalidade, evolução do risco, inadimplência por setor, heatmap setor × modalidade, boxplot Seaborn  |
+| Juros × Inadimplência        | Dispersão com regressão, Pearson/Spearman, faixas de juros, matriz de correlação (Seaborn)                      |
+| Indicadores BCB (API)        | Selic e inadimplência reais × base simulada                                                                     |
+| Tabela Dinâmica              | Pivot configurável, dados filtrados, estatísticas descritivas e download CSV                                    |
+| Banco de Dados SQL           | Modelo relacional, consultas SQL prontas, gravação do recorte filtrado                                          |
+| Conclusão Executiva          | Respostas às 7 perguntas, recomendações e limitações (texto gerado conforme os filtros)                         |
 
 ## 6. Como executar localmente
 
